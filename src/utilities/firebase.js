@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase, onValue, ref } from "firebase/database";
+import { getDatabase, onValue, ref, set } from "firebase/database";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -54,3 +54,5 @@ export const useData = (path, transform) => {
 
 	return [data, loading, error];
 };
+
+export const setData = (path, value) => set(ref(database, path), value);
