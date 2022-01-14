@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import {
+	getAuth,
+	GoogleAuthProvider,
+	onIdTokenChanged,
+	signInWithPopup,
+	signOut,
+} from "firebase/auth";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
 	apiKey: "AIzaSyBRgwNBR0Oi4jTBLnZkuR8rSialixafvy0",
 	authDomain: "scheduler-ffdf9.firebaseapp.com",
@@ -17,7 +21,6 @@ const firebaseConfig = {
 	measurementId: "G-4NLR34D4T4",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
@@ -56,3 +59,21 @@ export const useData = (path, transform) => {
 };
 
 export const setData = (path, value) => set(ref(database, path), value);
+
+export const signInWithGoogle = () => {
+	signInWithPopup(getAuth(app), new GoogleAuthProvider());
+};
+
+const firebaseSignOut = () => signOut(getAuth(app));
+
+export { firebaseSignOut as signOut };
+
+export const useUserState = () => {
+	const [user, setUser] = useState();
+
+	useEffect(() => {
+		onIdTokenChanged(getAuth(app), setUser);
+	}, []);
+
+	return [user];
+};
